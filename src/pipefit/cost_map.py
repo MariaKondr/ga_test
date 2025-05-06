@@ -23,6 +23,7 @@ class CostMapGenerator:
     def generate_cost_map(self, weights: Dict[str, float], 
                           default_weight: Optional[float] = None,
                           weight_mapping: Optional[Dict[str, str]] = None) -> np.ndarray:
+        
         """
         Generate a cost map by combining factors with weights.
         
@@ -66,18 +67,27 @@ class CostMapGenerator:
         
         # Combine factors with weights
         total_weight = sum(weight for factor, weight in weights.items() if factor in self.factors)
-        
+        #print(total_weight)
+
         if total_weight == 0:
             raise ValueError("Total weight is zero. Cannot create cost map.")
         
         for factor_name, weight in weights.items():
             if factor_name in self.factors:
                 # Normalize weight
-                normalized_weight = weight / total_weight
-                
+                #normalized_weight = weight / total_weight
+
                 # Add weighted factor to cost map
-                cost_map += self.factors[factor_name] * normalized_weight
-        
+                if factor_name != 'protected_areas':
+                #    print(factor_name)
+                    cost_map += self.factors[factor_name] * weight #normalized_weight
+                #print(self.factors[factor_name])
+                #print(normalized_weight)
+
+        #print(cost_map)       
+        cost_map = cost_map * self.factors['protected_areas'] # отдельное умножение
+        #print(cost_map)    
+
         return cost_map
     
     def visualize_cost_map(self, cost_map: np.ndarray, title: str = "Cost Map", 

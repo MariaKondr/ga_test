@@ -62,7 +62,7 @@ class DataLoader:
                 
             with rasterio.open(raster_file) as src:
                 # Store the raster data
-                self.factors[factor_name] = src.read(1)
+                self.factors[factor_name] = src.read(1)#.astype('uint8') # изменила тип, по умолачинию падала память
                 
                 # Store metadata for later use
                 self.factor_metadata[factor_name] = {
